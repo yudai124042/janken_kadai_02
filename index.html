@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>じゃんけんアプリ</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <style>
+    body {
+      text-align: center;
+      font-family: sans-serif;
+      padding: 30px;
+    }
+
+    .hand-btn {
+      font-size: 18px;
+      padding: 10px 20px;
+      margin: 10px;
+      background-color: lightblue;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    img {
+      width: 100px;
+      height: 100px;
+      margin: 10px;
+    }
+
+    #counts {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>じゃんけんアプリ</h1>
+
+  <!-- ボタン -->
+  <button class="hand-btn" data-hand="グー">グー ✊</button>
+  <button class="hand-btn" data-hand="チョキ">チョキ ✌</button>
+  <button class="hand-btn" data-hand="パー">パー ✋</button>
+
+  <!-- 画像表示 -->
+  <div>
+    <p>あなたの手：</p>
+    <img id="player_img" src="" alt="あなたの手">
+    <p>コンピュータの手：</p>
+    <img id="cpu_img" src="" alt="CPUの手">
+  </div>
+
+  <!-- 結果表示 -->
+  <h2 id="result">勝敗は？</h2>
+
+  <!-- 勝敗カウント -->
+  <div id="counts">
+    勝ち：<span id="win_count">0</span> /
+    負け：<span id="lose_count">0</span> /
+    あいこ：<span id="draw_count">0</span>
+  </div>
+
+
+
+
+  <!-- JS -->
+
+  <script>
+
+    // 手の種類を準備（配列）
+    const hands = ["グー", "チョキ", "パー"];
+  
+    // 画像のリンク（絵文字を使う）
+    const handImages = {
+      "グー": "https://emojicdn.elk.sh/✊",
+      "チョキ": "https://emojicdn.elk.sh/✌",
+      "パー": "https://emojicdn.elk.sh/✋"
+    };
+  
+    // カウント用の変数（勝ち・負け・あいこ）
+    let win = 0;
+    let lose = 0;
+    let draw = 0;
+  
+    // プレイヤーがボタンを押した時の処理
+    $(".hand-btn").on("click", function () {
+      
+      // プレイヤーが選んだ手を取得（data-handから取れる）
+      const playerHand = $(this).data("hand");
+  
+      // ランダムでCPUの手を決める
+      const randomNum = Math.floor(Math.random() * 3);  // 0〜2の数字
+      const cpuHand = hands[randomNum]; // 0→グー, 1→チョキ, 2→パー
+  
+      // 手の画像を表示
+      $("#player_img").attr("src", handImages[playerHand]);
+      $("#cpu_img").attr("src", handImages[cpuHand]);
+  
+      // 勝敗を判定（条件を全部書き出す）
+      let resultText = "";
+  
+      if (playerHand === cpuHand) {
+        draw = draw + 1; // あいこ数を増やす
+        resultText = "あいこ！";
+      } else if (playerHand === "グー" && cpuHand === "チョキ") {
+        win = win + 1;
+        resultText = "あなたの勝ち！";
+      } else if (playerHand === "チョキ" && cpuHand === "パー") {
+        win++;
+        resultText = "あなたの勝ち！";
+      } else if (playerHand === "パー" && cpuHand === "グー") {
+        win++;
+        resultText = "あなたの勝ち！";
+      } else {
+        lose = lose + 1;
+        resultText = "あなたの負け…";
+      }
+  
+      // 画面に勝敗を表示する
+      $("#result").text("結果：" + resultText);
+  
+      // 数字をHTMLに反映する
+      $("#win_count").text(win);
+      $("#lose_count").text(lose);
+      $("#draw_count").text(draw);
+  
+      // ログで確認（初心者はよく見る！）
+      console.log("プレイヤーの手：" + playerHand);
+      console.log("CPUの手：" + cpuHand);
+      console.log("判定結果：" + resultText);
+      console.log("勝：" + win, "負：" + lose, "あいこ：" + draw);
+    });
+  
+  </script>
+  
+</body>
+</html>
